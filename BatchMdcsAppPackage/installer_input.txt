@@ -1,0 +1,9 @@
+destinationFolder=c:\user\tasks\shared\mdcs
+fileInstallationKey=<enter your key here>
+agreeToLicense=yes
+outputFile=c:\user\tasks\shared\mdcs_silentinstall.log
+mode=silent
+setFileAssoc=false
+desktopShortcut=false
+startMenuShortcut=false
+createAccelTask=true

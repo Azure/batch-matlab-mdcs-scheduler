@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings name="parallel" xmlns="urn:mathworks.matlab.settings" xsi:schemaLocation="urn:mathworks.matlab.settings settings.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <settings name="profiles">
+        <settings name="BatchProfile" visible="true">
+            <key name="Description" visible="true">
+                <string>
+                    <value><![CDATA[Batch]]></value>
+                </string>
+            </key>
+            <key name="ProjectComponent" visible="true" anytype="true">
+            </key>
+            <key name="SchedulerComponent" visible="true">
+                <string>
+                    <value><![CDATA[GenericProfile1SchedulerComponent_Import]]></value>
+                </string>
+            </key>
+        </settings>
+    </settings>
+    <settings name="schedulercomponents">
+        <settings name="Generic" visible="true">
+            <settings name="GenericProfile1SchedulerComponent_Import" visible="true">
+                <key name="CancelJobFcn" visible="true" anytype="true">
+                </key>
+                <key name="CancelTaskFcn" visible="true" anytype="true">
+                </key>
+                <key name="ClusterMatlabRoot" visible="true" anytype="true">
+                </key>
+                <key name="CommunicatingSubmitFcn" visible="true" anytype="true">
+                    <string>
+                        <value><![CDATA[AAFJTQAAAAAOAAAAUAAAAAYAAAAIAAAABAAAAAAAAAAFAAAACAAAAAEAAAAbAAAAAQAAAAAAAAAQAAAAGwAAAGJhdGNoQ29tbXVuaWNhdGluZ1N1Ym1pdEZjbgAAAAAA]]></value>
+                    </string>
+                </key>
+                <key name="DeleteJobFcn" visible="true" anytype="true">
+                    <string>
+                        <value><![CDATA[AAFJTQAAAAAOAAAASAAAAAYAAAAIAAAABAAAAAAAAAAFAAAACAAAAAEAAAARAAAAAQAAAAAAAAAQAAAAEQAAAGJhdGNoRGVsZXRlSm9iRmNuAAAAAAAAAA==]]></value>
+                    </string>
+                </key>
+                <key name="DeleteTaskFcn" visible="true" anytype="true">
+                </key>
+                <key name="GetJobStateFcn" visible="true" anytype="true">
+                    <string>
+                        <value><![CDATA[AAFJTQAAAAAOAAAASAAAAAYAAAAIAAAABAAAAAAAAAAFAAAACAAAAAEAAAATAAAAAQAAAAAAAAAQAAAAEwAAAGJhdGNoR2V0Sm9iU3RhdGVGY24AAAAAAA==]]></value>
+                    </string>
+                </key>
+                <key name="HasSharedFilesystem" visible="true">
+                    <bool>
+                        <value>0</value>
+                    </bool>
+                </key>
+                <key name="IndependentSubmitFcn" visible="true">
+                    <string>
+                        <value><![CDATA[AAFJTQAAAAAOAAAAUAAAAAYAAAAIAAAABAAAAAAAAAAFAAAACAAAAAEAAAAZAAAAAQAAAAAAAAAQAAAAGQAAAGJhdGNoSW5kZXBlbmRlbnRTdWJtaXRGY24AAAAAAAAA]]></value>
+                    </string>
+                </key>
+                <key name="OperatingSystem" visible="true">
+                    <string>
+                        <value><![CDATA[windows]]></value>
+                    </string>
+                </key>
+                <key name="RequiresMathWorksHostedLicensing" visible="true">
+                    <bool>
+                        <value>1</value>
+                    </bool>
+                </key>
+            </settings>
+        </settings>
+    </settings>
+</settings>
