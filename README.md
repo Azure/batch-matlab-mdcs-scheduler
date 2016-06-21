@@ -100,3 +100,6 @@ To verify your Batch cluster setup, go to the **Home** tab of the MATLAB toolbar
 NOTE: The final job will fail because it attempts to create an interactive parpool session. This is not yet supported.  
 
 NOTE: The validation suite includes 2 communicating jobs, so the Batch pool you use for validation must have the MaxTasksPerComputeNode property set to 1.
+
+***
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
