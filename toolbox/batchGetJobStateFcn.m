@@ -40,7 +40,7 @@ if strcmpi(jobState, 'finished')
     
     % Because of the short circuit before the .NET call above, we should avoid redundant downloads.
     fprintf('Downloading job data...\n');
-    batchLib.CopyJobDataFromShare(job.Username, cluster.JobStorageLocation, data.JobLocation, job.Name);
+    batchLib.CopyJobDataFromShare(job.Username, cluster.JobStorageLocation, data.JobLocation);
     fprintf('Downloaded job data from share.\n');
 end
 

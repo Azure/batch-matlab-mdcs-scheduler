@@ -22,7 +22,7 @@ if isempty(data)
 end
 
 batchLib = getBatchLib();
-batchLib.DeleteJob(data.BatchClusterJobId, job.Name, job.Username, data.JobLocation);
+batchLib.DeleteJob(data.BatchClusterJobId, job.Username, data.JobLocation);
 
 end
 
