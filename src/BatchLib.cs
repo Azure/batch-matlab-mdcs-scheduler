@@ -123,20 +123,20 @@ namespace MatlabBatchLib
         /// </summary>
         /// <param name="jobUser">The user who iniated the MATLAB job.</param>
         /// <param name="localJobDataRoot">The root path on the local machine where MATLAB job data is stored.</param>
-        /// <param name="jobDataDirectory">The directory containing the files for the job specified by the matlabJobName parameter.</param>
-        /// <param name="matlabJobName">The MATLAB job whose data is copied to the Storage file share.</param>
-        public void CopyJobDataToShare(string jobUser, string localJobDataRoot, string jobDataDirectory, string matlabJobName)
+        /// <param name="jobDataDirectory">The directory containing the files for the job.</param>
+        public void CopyJobDataToShare(string jobUser, string localJobDataRoot, string jobDataDirectory)
         {
             CloudFileDirectory userCloudDir = GetUserShareDirectory(jobUser, shouldCreateDirectories: true);
 
-            // MATLAB job names can be reused, so clean the job files before uploading anything to avoid
+            // MATLAB job directories can be reused, so clean the job files before uploading anything to avoid
             // issues from leftover files of old tasks.
-            CleanCloudDirectory(userCloudDir, matlabJobName, jobDataDirectory);
+            CleanCloudDirectory(userCloudDir, jobDataDirectory);
 
             // Upload the job files in the job data directory root
+            // The names of files associated with the job in the root directory will all begin with "<jobDataDirectory>."
             UploadDirectoryOptions jobFilesInRootOptions = new UploadDirectoryOptions()
             {
-                SearchPattern = matlabJobName + ".*",
+                SearchPattern = jobDataDirectory + ".*",
                 Recursive = false
             };
             Task jobFilesTask = TransferManager.UploadDirectoryAsync(localJobDataRoot, userCloudDir, jobFilesInRootOptions, null);
@@ -196,13 +196,10 @@ namespace MatlabBatchLib
         /// Recursively deletes a CloudFileDirectory's contents, optionally scoped to only a single job's files.
         /// </summary>
         /// <param name="dir">The CloudFileDirectory to delete the contents of.</param>
-        /// <param name="matlabJobName">If specified, only files associated with this job will be deleted.
-        /// Otherwise, all files will be deleted.
+        /// <param name="jobDataDirectory">If specified, only the specified job data directory and files associated 
+        /// with the job in the root directory will be deleted. Otherwise, all directories will be deleted.
         /// </param>
-        /// <param name="jobDataDirectory">If specified, only the specified job data directory will be deleted.
-        /// Otherwise, all directories will be deleted.
-        /// </param>
-        private void CleanCloudDirectory(CloudFileDirectory dir, string matlabJobName, string jobDataDirectory)
+        private void CleanCloudDirectory(CloudFileDirectory dir, string jobDataDirectory)
         {
             if (!dir.Exists())
             {
@@ -215,8 +212,9 @@ namespace MatlabBatchLib
                 if (fileItem is CloudFile)
                 {
                     CloudFile cloudFile = (CloudFile)fileItem;
+                    // The names of files associated with the job in the root directory will all begin with "<jobDataDirectory>."
                     // The "." is added to the job name to ensure that we don't delete Job10's files when the user passes in "Job1"
-                    if (string.IsNullOrEmpty(matlabJobName) || cloudFile.Name.StartsWith(matlabJobName + ".", StringComparison.OrdinalIgnoreCase))
+                    if (string.IsNullOrEmpty(jobDataDirectory) || cloudFile.Name.StartsWith(jobDataDirectory + ".", StringComparison.OrdinalIgnoreCase))
                     {
                         fileDeleteTasks.Add(cloudFile.DeleteAsync());
                     }
@@ -227,7 +225,7 @@ namespace MatlabBatchLib
                     if (string.IsNullOrEmpty(jobDataDirectory) || cloudDir.Name.Equals(jobDataDirectory, StringComparison.OrdinalIgnoreCase))
                     {
                         // Directory must be empty before it can be deleted, so we recursively delete all subdirectories.
-                        CleanCloudDirectory(cloudDir, null, null);
+                        CleanCloudDirectory(cloudDir, null);
                         cloudDir.Delete();
                     }
                 }
@@ -241,17 +239,17 @@ namespace MatlabBatchLib
         /// </summary>
         /// <param name="jobUser">The user who initiated the MATLAB job.</param>
         /// <param name="localJobDataRoot">The root path on the local machine where MATLAB job data is stored.</param>
-        /// <param name="jobDataDirectory">The directory containing the files for the job specified by the matlabJobName parameter.</param>
-        /// <param name="matlabJobName">The MATLAB job whose data is copied from the Storage file share.</param>
-        public void CopyJobDataFromShare(string jobUser, string localJobDataRoot, string jobDataDirectory, string matlabJobName)
+        /// <param name="jobDataDirectory">The directory containing the files for the job.</param>
+        public void CopyJobDataFromShare(string jobUser, string localJobDataRoot, string jobDataDirectory)
         {
             CloudFileDirectory userCloudDir = GetUserShareDirectory(jobUser, shouldCreateDirectories: false);
             CloudFileDirectory jobCloudDirectory = userCloudDir.GetDirectoryReference(jobDataDirectory);
 
             // Ideally, we could specify a search pattern like "Job1.*" and target the whole directory, but the Storage library only supports
             // exact matches for downloading a CloudFileDirectory.  Therefore, we copy specific job output files by name.
-            string jobOutputFileName = matlabJobName + ".out.mat";
-            string jobCommonFileName = matlabJobName + ".common.mat";
+            // The names of files associated with the job in the root directory will all begin with "<jobDataDirectory>."
+            string jobOutputFileName = jobDataDirectory + ".out.mat";
+            string jobCommonFileName = jobDataDirectory + ".common.mat";
             string jobOutputLocalPath = string.Join("\\", localJobDataRoot, jobOutputFileName);
             string jobCommonLocalPath = string.Join("\\", localJobDataRoot, jobCommonFileName);
 
@@ -550,15 +548,14 @@ namespace MatlabBatchLib
         /// Deletes the specified Azure Batch job along with its data in Azure Storage.
         /// </summary>
         /// <param name="jobId">The id of the Batch job to delete.</param>
-        /// <param name="matlabJobName">The name of the associated MATLAB job.</param>
         /// <param name="jobUser">The job user.</param>
-        /// <param name="jobDataDirectory">The job directory data.</param>
-        public void DeleteJob(string jobId, string matlabJobName, string jobUser, string jobDataDirectory)
+        /// <param name="jobDataDirectory">The job data directory.</param>
+        public void DeleteJob(string jobId, string jobUser, string jobDataDirectory)
         {
             // Delete the job data in Azure Storage
             CloudFileDirectory userCloudDir = GetUserShareDirectory(jobUser, shouldCreateDirectories: false);
 
-            CleanCloudDirectory(userCloudDir, matlabJobName, jobDataDirectory);
+            CleanCloudDirectory(userCloudDir, jobDataDirectory);
 
             // Delete the job in the Batch service
             JobOperations jobOps = this.batchClient.JobOperations;

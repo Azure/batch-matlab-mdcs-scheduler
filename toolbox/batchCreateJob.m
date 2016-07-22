@@ -8,7 +8,7 @@ config = getBatchConfigs();
 batchLib = getBatchLib();
 
 % Copy job data to Azure Storage
-batchLib.CopyJobDataToShare(job.Username, cluster.JobStorageLocation, props.JobLocation, job.Name);
+batchLib.CopyJobDataToShare(job.Username, cluster.JobStorageLocation, props.JobLocation);
 fprintf('Job data uploaded to share\n');
 
 % Create the job
